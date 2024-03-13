@@ -29,5 +29,5 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         push: true
-        tags: ${{ env.ACRFullName }}/${{ env.ACRImageName }}:${{ env.ACRImageTag }}
+        tags: ${{ env.ACRFullName }}/${{ env.ACRImageName }}:1 
         file: ./Dockerfile
