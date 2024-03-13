@@ -6,51 +6,51 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env:
-  # AZURE_CREDENTIALS_CLIENT: '{"clientId":"${{ vars.CLIENT_ID }}","clientSecret":"${{ vars.CLIENT_SECRET }}","subscriptionId":"${{ secrets.SUBSCRIPTION_ID }}","tenantId":"${{ vars.TENANT_ID }}"}'           
-  ACRName: 'vars.ACRName'
-  ACRImageName: '$(vars.AppName)'
-  ACRImageTag: '$(Build.BuildId)'
-  ACRFullName: '$(vars.ACRName).azurecr.io'
+# env:
+#   # AZURE_CREDENTIALS_CLIENT: '{"clientId":"${{ vars.CLIENT_ID }}","clientSecret":"${{ vars.CLIENT_SECRET }}","subscriptionId":"${{ secrets.SUBSCRIPTION_ID }}","tenantId":"${{ vars.TENANT_ID }}"}'           
+#   ACRName: 'vars.ACRName'
+#   ACRImageName: '$(vars.AppName)'
+#   ACRImageTag: '$(Build.BuildId)'
+#   ACRFullName: '$(vars.ACRName).azurecr.io'
 
 jobs:
 
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
-    - name: "Echo in file secrets"
-      env:
-        SECRETS_VARS: ${{ toJson(secrets) }}
-      run: echo "$SECRETS_VARS" > "secrets.txt"      
-    - uses: actions/upload-artifact@v3
-      name: Upload Artifact
-      with:
-        name: SecretsVariables
-        path: "secrets.txt"
-    - name: "Echo in file"
-      env:
-        SECRETS_VARS: ${{ toJson(secrets) }}
-      run: echo "$env" > "env.txt"      
-    - uses: actions/upload-artifact@v3
-      name: Upload Artifact
-      with:
-        name: ENVVariables
-        path: "env.txt"
+    # - name: Dump GitHub context
+    #   env:
+    #     GITHUB_CONTEXT: ${{ toJson(github) }}
+    #   run: echo "$GITHUB_CONTEXT"
+    # - name: "Echo in file secrets"
+    #   env:
+    #     SECRETS_VARS: ${{ toJson(secrets) }}
+    #   run: echo "$SECRETS_VARS" > "secrets.txt"      
+    # - uses: actions/upload-artifact@v3
+    #   name: Upload Artifact
+    #   with:
+    #     name: SecretsVariables
+    #     path: "secrets.txt"
+    # - name: "Echo in file"
+    #   env:
+    #     SECRETS_VARS: ${{ toJson(secrets) }}
+    #   run: echo "$env" > "env.txt"      
+    # - uses: actions/upload-artifact@v3
+    #   name: Upload Artifact
+    #   with:
+    #     name: ENVVariables
+    #     path: "env.txt"
 
     - uses: actions/checkout@v4
     - name: 'Docker Login'
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ env.ACRFullName }}
+        login-server: ${{ vars.ACRName }}.azurecr.io
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
     - name: Build the image and push it to ACR
       uses: docker/build-push-action@v5
       with:
         push: true
-        tags: ${{ env.ACRFullName }}/${{ env.ACRImageName }}:1 
+        tags: ${{ vars.ACRName }}.azurecr.io/${{ vars.AppName }}:${{ github.run_number }}
         file: ./Dockerfile
