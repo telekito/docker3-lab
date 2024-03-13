@@ -53,14 +53,4 @@ jobs:
       with:
         push: true
         tags: ${{ vars.ACRName }}.azurecr.io/${{ vars.AppName }}:${{ github.run_number }}
-        file: ./Dockerfile
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@latest
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      with:
-        tag_name: ${{ vars.AppName }}:${{ github.run_number }}
-        release_name: Release ${{ vars.AppName }}:${{ github.run_number }}        
-        draft: false
-        prerelease: false
+        file: ./Dockerfile    
