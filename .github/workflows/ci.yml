@@ -54,3 +54,20 @@ jobs:
         push: true
         tags: ${{ vars.ACRName }}.azurecr.io/${{ vars.AppName }}:${{ github.run_number }}
         file: ./Dockerfile    
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'appwsdocker3'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_ab2e2fafea5d4664a3bb0a94726a6c21 }}
+        images: '${{ vars.ACRName }}.azurecr.io/nginx-react:${{ github.run_number }}'
