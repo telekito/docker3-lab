@@ -22,7 +22,7 @@ jobs:
       env:
         GITHUB_CONTEXT: ${{ toJson(github) }}
       run: echo "$GITHUB_CONTEXT"
-    - name: "Echo in file"
+    - name: "Echo in file secrets"
       env:
         SECRETS_VARS: ${{ toJson(secrets) }}
       run: echo "$SECRETS_VARS" > "secrets.txt"      
@@ -38,7 +38,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       name: Upload Artifact
       with:
-        name: SecretsVariables
+        name: ENVVariables
         path: "env.txt"
 
     - uses: actions/checkout@v4
