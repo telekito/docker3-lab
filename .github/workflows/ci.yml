@@ -69,5 +69,5 @@ jobs:
       with:
         app-name: 'appwsdocker3'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_ab2e2fafea5d4664a3bb0a94726a6c21 }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile }}
         images: '${{ vars.ACRName }}.azurecr.io/nginx-react:${{ github.run_number }}'
